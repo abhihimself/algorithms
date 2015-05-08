@@ -1,4 +1,5 @@
 # Enter your code here. Read input from STDIN. Print output to STDOUT
+#3 2 2
 use warnings;
 use strict;
 chomp( my $t = <> );
@@ -6,99 +7,78 @@ my $ladders_hash;
 my $snakes_hash;
 my $ladders_key;
 my $snakes_key;
-my ( $quo, $rem );
-my ( $ladder, $outcome, $count, $fin_rem, $l_move );
-
+my @board;
+my @visited;
+my @queue;
+my @enter_cell;
+my @tmp_cell;
+my $rem_cell;
+my $distance=0;
+my $N=100;
 #$move=0;
 
 for ( 1 .. $t ) {
-	$outcome = 1;
-	$count   = 0;
+
 	( $ladders_hash, $ladders_key ) = get_data();
 	( $snakes_hash,  $snakes_key )  = get_data();
 
-	while ( $outcome != 100 ) {
-		if ( $ladder = find_ladder( $outcome, $ladders_key ) ) {
-			$l_move = $ladder - $outcome;
-			if ( $l_move < 6 ) {
-				$count++;
-				$outcome = $ladders_hash->{$ladder};
-			}
-	while ( $outcome != 100 ) {
-			elsif ( $l_move > 6 ) {
-				( $quo, $rem ) = ( int $l_move / 6, $l_move % 6 );
-				for ( 1 .. $quo ) {
-					$outcome = $outcome + 6;
-					if ( check_snake( $snakes_key, $outcome ) == 1 ) {
-						$outcome--;
-						$rem++;
-						$count++;
-					}
-					else {
-						$count++;
-					}
+#make board
+for(0..$N-1){
+	$board[$_]=-1;
+	$visited[$_]='false';
+}
 
-				}
+#update snake ladder values in cell
+foreach(@{$ladders_key}){
+	$board[$_]=$ladders_hash->{$_}-1;
+}
+foreach(@{$snakes_key}){
+	$board[$_]=$snakes_hash->{$_}-1;
+}
+#############################################################################
 
-				#$outcome=$outcome+$rem;
-				$outcome = $ladders_hash->{$ladder};
-				$count++;
-			}
-		}
-		else {
-			$l_move = 100 - $outcome;
-			if ( $l_move < 6 ) {
-				$count++;
-				$outcome = $outcome + $l_move;
-			}
-			elsif ( $l_move > 6 ) {
-				( $quo, $rem ) = ( int $l_move / 6, $l_move % 6 );
-				for ( 1 .. $quo ) {
-					$outcome = $outcome + 6;
-					if ( check_snake( $snakes_key, $outcome ) == 1 ) {
-						$outcome--;
-						$rem++;
-						$count++;
-					}
-					else {
-						$count++;
-					}
 
-				}
-				$outcome = $outcome + $rem;
-				$count++;
-			}
+@enter_cell=(0,0);
+$queue[0]=\@enter_cell;
+$visited[0]='true';
+$distance=$enter_cell[1];
 
-		}
+
+while($#queue!=-1){
+	$rem_cell=$queue[$#queue];
+	if(${$rem_cell}[0]==$N-1){
+		#print ${$rem_cell}[1];
+		last;
+	}
+	shift @queue;
+	for(${$rem_cell}[0]+1..${$rem_cell}[0]+6){
+		if($_<$N-1){
+			
 		
-	}
-	print $count, "\n";
-}
-
-sub find_ladder {
-	my $outcome    = shift @_;
-	my $ladder_key = shift @_;
-	my @possible;
-	foreach ( @{$ladder_key} ) {
-		if ( $outcome < $_ ) {
-			return $_;
+		if($visited[$_] ne 'true'){
+			$visited[$_]='true';
+			$tmp_cell[1]=$distance+1;
+			if($board[$_]!=-1){
+				$tmp_cell[0]=$board[$_];
+			}
+			else{
+				$tmp_cell[0]=$_;
+			
+			}
+		push (@queue,\@tmp_cell);
+		}
 		}
 	}
-	return 0;
+	$distance=$tmp_cell[1];
+	
+}
+print $tmp_cell[1],"\n";
 
 }
 
-sub check_snake {
-	my $snake_key = shift @_;
-	my $outcome   = shift @_;
-	foreach ( @{$snake_key} ) {
-		if ( $outcome == $_ ) {
-			return 1;
-		}
-	}
-	return 0;
 
-}
+
+
 
 sub get_data {
 	my ( $data_num, $line, $i );
