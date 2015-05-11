@@ -2,6 +2,7 @@
 #3 2 2
 use warnings;
 use strict;
+use Data::Dumper;
 chomp( my $t = <> );
 my $ladders_hash;
 my $snakes_hash;
@@ -11,10 +12,11 @@ my @board;
 my @visited;
 my @queue;
 my @enter_cell;
-my @tmp_cell;
+my @tmp_cell=(0,0);
 my $rem_cell;
 my $distance=0;
 my $N=100;
+my $test;
 #$move=0;
 
 for ( 1 .. $t ) {
@@ -36,28 +38,29 @@ foreach(@{$snakes_key}){
 	$board[$_]=$snakes_hash->{$_}-1;
 }
 #############################################################################
+#print Dumper @board;
 
+push @queue, [0,0];
 
-@enter_cell=(0,0);
-$queue[0]=\@enter_cell;
 $visited[0]='true';
-$distance=$enter_cell[1];
+
 
 
 while($#queue!=-1){
 	$rem_cell=$queue[$#queue];
+
 	if(${$rem_cell}[0]==$N-1){
-		#print ${$rem_cell}[1];
+		
 		last;
 	}
-	shift @queue;
-	for(${$rem_cell}[0]+1..${$rem_cell}[0]+6){
-		if($_<$N-1){
-			
+	 $test =shift @queue;
+	for(${$test}[0]+1..${$test}[0]+6 ){
+				
+			if($_ <$N-1){
 		
 		if($visited[$_] ne 'true'){
 			$visited[$_]='true';
-			$tmp_cell[1]=$distance+1;
+			$tmp_cell[1]=${$test}[1]+1;
 			if($board[$_]!=-1){
 				$tmp_cell[0]=$board[$_];
 			}
@@ -65,14 +68,20 @@ while($#queue!=-1){
 				$tmp_cell[0]=$_;
 			
 			}
-		push (@queue,\@tmp_cell);
+		push @queue,[$tmp_cell[0],$tmp_cell[1]];
+		print Dumper @queue;
 		}
-		}
+		
 	}
-	$distance=$tmp_cell[1];
+	else{
+	last;
+	
+	}
+	}
+	
 	
 }
-print $tmp_cell[1],"\n";
+print $tmp_cell[1];
 
 }
 
