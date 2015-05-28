@@ -8,26 +8,42 @@
 ####################################################################################################################################
 use warnings;
 use strict;
+use Data::Dumper;
 chomp(my $ar_size=<>);
 chomp(my $line =<>);
 my @arr=split(/ /,$line);
-#my $first=0;
-#my $last=$#arr;
-my ($i,$j);
+my @stack;
+#if($#arr==0){
+#	print @arr,"\n";
+#}
 
-partition(\@arr);	
 
+my $first=0;
+my $last=$#arr;
+@stack=($first,$last);
+my ($first_of_first,$last_of_first,$first_of_last,$last_of_last);
+	do{
+if($last>$first){
+	($first_of_first,$last_of_first,$first_of_last,$last_of_last)=partition(\@arr,$first,$last);
+	push(@stack,$first_of_last,$last_of_last,$first_of_first,$last_of_first);		
+}		
+
+($first,$last)= splice @stack, -2, 2;		
+		
+	}while(@stack);
 
 
 sub partition{
 my $arr = shift @_;	
+
 my ($first,$last,$pivot);
-$first=0;
-$last =$#{$arr};
+$first=shift @_;
+$last =shift @_;
 $pivot =${$arr}[$last];
 my ($i,$j);
 $i=$first;
 $j = $last-1;
+my @range;
 scan: {
 	do{
 		
@@ -47,10 +63,14 @@ scan: {
 
 	
 }	
-	print @{$arr},"\n";
+
+	#print @{$arr},"\n";
 	if($i<$last){
 		@{$arr}[$i,$last]=@{$arr}[$last,$i]
 	}
 		
-	print @{$arr},"\n";
+	print join " ",@{$arr},"\n";
+	#push @range ,(0,$j);
+	#push @range,($i+1,$#{$arr});
+	return($first,$j,$i+1,$last);
 }
