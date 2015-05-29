@@ -51,12 +51,12 @@ while(${$arr}[$i]<$pivot){
 
 for $left($i..$j){
 	if(${$arr}[$left]<$pivot){
-		@{$arr}[$wall,$left]=@{$arr}[$left,$wall];
+		@{$arr}[$i,$left]=@{$arr}[$left,$i];
 		$wall=$left;
 	}
 }
 
-@{$arr}[$wall,$pivot]=@{$arr}[$pivot,$wall];
+@{$arr}[$wall,$pivot]=@{$arr}[$pivot,$wall] if($wall<$last);
 
 
 	#print @{$arr},"\n";
