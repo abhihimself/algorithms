@@ -14,22 +14,17 @@ chomp(my $ar_size=<>);
 chomp(my $line =<>);
 my @arr=split(/ /,$line);
 my @stack;
-#if($#arr==0){
-#	print @arr,"\n";
-#}
-
-
 my $first=0;
 my $last=$#arr;
 @stack=($first,$last);
 my ($first_of_first,$last_of_first,$first_of_last,$last_of_last);
 	do{
-if($last>$first){
+if($last>$first){ #Array is greater than one. Then call the partition function
 	($first_of_first,$last_of_first,$first_of_last,$last_of_last)=partition(\@arr,$first,$last);
 	push(@stack,$first_of_last,$last_of_last,$first_of_first,$last_of_first);		
 }		
-
-($first,$last)= splice @stack, -2, 2;		
+#Put all the subarrays in a stack whch follow FILO rule.
+($first,$last)= splice @stack, -2, 2;	#Pick the top subarray from stack. Splice is for double pop.
 		
 	}while(@stack);
 
@@ -46,26 +41,19 @@ my ($i,$j);
 $i=$wall;
 $j=$last-1;
 while(${$arr}[$i]<$pivot){
-	$i++;
+	$i++; #move i as far as possible
 }
-
-for $left($i..$j){
+$wall=$i;
+for $left($i+1..$j){ #when i can not move further search for an element less than pivot and swap it.
 	if(${$arr}[$left]<$pivot){
-		@{$arr}[$i,$left]=@{$arr}[$left,$i];
-		$wall=$left;
+		@{$arr}[$wall,$left]=@{$arr}[$left,$wall];
+		$wall++;
 	}
 }
 
-@{$arr}[$wall,$pivot]=@{$arr}[$pivot,$wall] if($wall<$last);
+@{$arr}[$wall,$last]=@{$arr}[$last,$wall] if($wall<$last); #swap the pivot
 
-
-	#print @{$arr},"\n";
-	#if($i<$last){
-	#	@{$arr}[$i,$last]=@{$arr}[$last,$i]
-	#}
 		
 	print join " ",@{$arr},"\n";
-	#push @range ,(0,$j);
-	#push @range,($i+1,$#{$arr});
-	return($first,$wall-1,$wall+1,$last);
+	return($first,$wall-1,$wall+1,$last); #return the subarrays limits
 }
