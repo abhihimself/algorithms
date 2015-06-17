@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#Comparison of quick sort and insertion sort
+#Goal-Comparison of quick sort and insertion sort
 #Author-Abhishek
 #Hackerrank problem
 #left wall algorithm for quick sort. Insertion sort as usual.
@@ -26,34 +26,35 @@ sub insertion_sort{
 	#my $first=0;
 	my $count =0;
 	my $last = $#{$arr};
-	for $pointer1(1..$last){
+	for $pointer1(1..$last){ #We are starting from 1st element. Because for 0th element there is nothing to sort.
 		$value=${$arr}[$pointer1];
 		$pointer2=$pointer1-1;
 		
-		while($pointer2>=0){
+		while($pointer2>=0){ 
 			
 			if($value<${$arr}[$pointer2]){
-				if($pointer2==0 ){
-			#${$arr}[$pointer1]=${$arr}[$pointer2];
-			${$arr}[$pointer2]=$value;
-			$count++;
-			}
 				${$arr}[$pointer1]=${$arr}[$pointer2];
-				$pointer1=$pointer2;
-				$count++;
+					$count++; #counting every shift
+				if($pointer2==0){
+					${$arr}[$pointer2]=$value; #If pointer2 is reached to 0th index we have to insert the current value there only.We have nowhere to go further.
+					last;
+				}
+			
+					
+				$pointer1=$pointer2;						
 			}
 			else{
-			${$arr}[$pointer1]=$value;
+			${$arr}[$pointer1]=$value; #Inseritng the value in the sorted subarray
 			#$count++;
 			last;	
 			}
 			
-			$pointer2--;
+			$pointer2--; #decreasing the inner loop
 			}
-			
+		#print $count,"\n";	
 		}
-		print @{$arr},"\n";
-		print $count,"\n";
+		#print @{$arr},"\n";
+		#print "insert: $count","\n";
 		return $count;
 	}
 	
@@ -76,16 +77,17 @@ sub quick_sort {
 			( $first_of_first, $last_of_first, $first_of_last, $last_of_last,$curr_count )
 			  = partition( $arr, $first, $last );
 			  $count = $count+$curr_count;
-			push( @stack,
+			push( @stack,   
+		#Put all the subarrays in a stack which follow FILO rule.
 				$first_of_last,  $last_of_last,
 				$first_of_first, $last_of_first );
 		}
 
-		#Put all the subarrays in a stack whch follow FILO rule.
 		( $first, $last ) = splice @stack, -2,
 		  2;    #Pick the top subarray from stack. Splice is for double pop.
 
 	} while (@stack);
+#print "quick: $count","\n";
 return $count;
 }
 
@@ -118,9 +120,9 @@ $count++;
 	}
 if ( $wall < $last ){
 	@{$arr}[ $wall, $last ] = @{$arr}[ $last, $wall ];    #swap the pivot
-	$count++
+	
 }
-
+$count++;
 	#print join " ", @{$arr}, "\n";
 	return ( $first, $wall - 1, $wall + 1, $last, $count ); #return the subarrays limits
 }
