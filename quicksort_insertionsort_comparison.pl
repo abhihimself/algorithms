@@ -22,27 +22,37 @@ sub insertion_sort{
 	my $arr=shift @_;
 	my $pointer1;
 	my $pointer2;
+	my $value;
 	#my $first=0;
 	my $count =0;
 	my $last = $#{$arr};
 	for $pointer1(1..$last){
+		$value=${$arr}[$pointer1];
 		$pointer2=$pointer1-1;
-		while($pointer2){
-			if(${$arr}[$pointer1]<${$arr}[$pointer2]){
-				@{$arr}[$pointer1,$pointer2]=@{$arr}[$pointer2,$pointer1];
-				$count=$count+(abs($pointer1-$pointer2));
-				
-				last;
-			}
-			#else{
-			#	next;
-			#}
+		
+		while($pointer2>=0){
+			
+			if($value<${$arr}[$pointer2]){
+				if($pointer2==0 ){
+			#${$arr}[$pointer1]=${$arr}[$pointer2];
+			${$arr}[$pointer2]=$value;
 			$count++;
+			}
+				${$arr}[$pointer1]=${$arr}[$pointer2];
+				$pointer1=$pointer2;
+				$count++;
+			}
+			else{
+			${$arr}[$pointer1]=$value;
+			#$count++;
+			last;	
+			}
+			
 			$pointer2--;
 			}
 			
 		}
-		#print @{$arr},"\n";
+		print @{$arr},"\n";
 		print $count,"\n";
 		return $count;
 	}
